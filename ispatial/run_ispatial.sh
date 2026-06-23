@@ -5,6 +5,7 @@ set -euo pipefail
 
 # ---- project setup ---------------------------------------------------------
 export DESIGN_NAME="my_top"
+export PROCESS_NODE="7"   # process node in nm (7, 16, 28, ...)
 
 export RTL_LIST="$(ls ./rtl/*.v ./rtl/*.sv 2>/dev/null | xargs)"
 export SDC_FILE="./constraints/${DESIGN_NAME}.sdc"
