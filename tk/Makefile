@@ -5,13 +5,6 @@
 
 BLOCKS ?= codec_top_wrap flexible_top_wrap wlan_top_wrap btc_top_wrap
 
-# Short titles for Verdi xterm windows (full block names are too long).
-# Unset entries fall back to the block name itself.
-TITLE_codec_top_wrap    := codec
-TITLE_flexible_top_wrap := flex
-TITLE_wlan_top_wrap     := wlan
-TITLE_btc_top_wrap      := btc
-
 # Team filesystem paths — override on the command line if layout differs.
 DFT_IN      ?= /home/projects/projects/DFT_IN/projects
 RELEASE_SRC ?= /home/projects/projects/leo/projects/release_to_dft
@@ -78,7 +71,7 @@ strip_flist:
 	sed -i "/^#.*/d" $(FLISTS)
 
 verdi-%:
-	xterm -title "$(or $(TITLE_$*),verdi_$*)" -e 'cd $*/verdi && run_verdi' &
+	xterm -title "verdi_$*" -e 'cd $*/verdi && run_verdi' &
 
 # ----------------------------------------------------------------------------
 # ltest — submit a DRC-check LSF job per block
