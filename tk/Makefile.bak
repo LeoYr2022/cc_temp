@@ -1,0 +1,32 @@
+.PHONY : main clean run run_all prepare runone ana rf usb core chip run_core lib GUI
+
+default: clean
+
+gen_dft_files:
+	@echo "-- Gen DFT RTL --"
+	rm -rf /home/projects/projects/DFT_IN/projects/top_common/
+	cp -r /home/projects/projects/leo/projects/release_to_dft/top_common /home/projects/projects/DFT_IN/projects/top_common/
+	xterm -e "./.run/release_block.csh codec_top_wrap" &
+	xterm -e "./.run/release_block.csh flexible_top_wrap" & 
+	xterm -e "./.run/release_block.csh wlan_top_wrap" &
+	xterm -e "./.run/release_block.csh btc_top_wrap" &
+
+chk_files:
+	@echo "-- Check copy files --"
+	vim -p ./*/.*/rtl/flist/flist_*.f
+
+verdi:
+	@echo "--Build Verdi  --"
+	sed -i "/^#.*/d" ./*/.*/rtl/flist/flist_*.f
+	xterm -title "btc" -e 'cd btc_top_wrap/verdi && run_verdi' &
+	xterm -title "codec" -e 'cd codec_top_wrap/verdi && run_verdi' &
+	xterm -title "flex" -e 'cd flexible_top_wrap/verdi && run_verdi' &
+	xterm -title "wlan" -e 'cd wlan_top_wrap/verdi && run_verdi' &
+
+ltest:
+	bsub -Ip -q dig -R"rusage[mem=51200]" -M 51200! xterm -bg gray -fa 'Monospace' -fs 14 -title "btc_top_wrap" -e 'cd btc_top_wrap/ts && .run_drc_check' &
+	bsub -Ip -q dig -R"rusage[mem=51200]" -M 51200! xterm -bg gray -fa 'Monospace' -fs 14 -title "codec_top_wrap" -e 'cd codec_top_wrap/ts && .run_drc_check' &
+	bsub -Ip -q dig -R"rusage[mem=51200]" -M 51200! xterm -bg gray -fa 'Monospace' -fs 14 -title "flexible_top_wrap" -e 'cd flexible_top_wrap/ts && .run_drc_check' &
+	bsub -Ip -q dig -R"rusage[mem=51200]" -M 51200! xterm -bg gray -fa 'Monospace' -fs 14 -title "wlan_top_wrap" -e 'cd wlan_top_wrap/ts && .run_drc_check' &
+
+
