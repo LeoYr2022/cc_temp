@@ -11,6 +11,7 @@ RELEASE_SRC ?= /home/projects/projects/leo/projects/release_to_dft
 
 # Flist files cleaned before Verdi / inspected by chk_files.
 FLISTS := ./*/.*/rtl/flist/flist_*.f
+ANA_LIB_FLISTS := ./*/.*/lib/VERILOG/flist_*.f
 
 # LSF + xterm options for ltest.
 BSUB_OPTS  := -Ip -q dig -R"rusage[mem=51200]" -M 51200!
@@ -69,6 +70,7 @@ verdi: strip_flist $(VERDI_TARGETS)
 strip_flist:
 	@echo "-- Build Verdi --"
 	sed -i "/^#.*/d" $(FLISTS)
+	sed -i "/^#.*/d" $(ANA_LIB_FLISTS)
 
 verdi-%:
 	xterm -title "verdi_$*" -e 'cd $*/verdi && run_verdi' &
